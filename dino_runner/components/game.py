@@ -86,7 +86,8 @@ class Game:
             self.menu.draw(self.screen)
         else:
             self.menu.update_message('XX GAME OVER XX') 
-            self.menu.draw(self.screen)  
+            self.menu.draw(self.screen)
+            self.draw_score()  
         
         self.menu.draw(self.screen)
         self.menu.update(self)
