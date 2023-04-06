@@ -1,9 +1,9 @@
-import pygame
-from dino_runner.components.obstacles.bird import Bird
-from dino_runner.components.obstacles.cactus import SmallCactus, LargeCactus
-from dino_runner.utils.constants import SMALL_CACTUS, BIRD, LARGE_CACTUS
 import random
-
+import pygame
+from dino_runner.components import obstacles
+from dino_runner.components.obstacles.bird import Bird
+from dino_runner.components.obstacles.cactus import Cactus
+from dino_runner.utils.constants import SMALL_CACTUS
 
 class ObstacleManager:
     def __init__(self):
@@ -11,30 +11,35 @@ class ObstacleManager:
         
         
         
-    
+        
     def update(self, game):
         if len(self.obstacles) == 0:
-            if random.randint(0, 2) == 0:
-                self.obstacles.append(SmallCactus(SMALL_CACTUS))
-            elif random.randint(0, 2) == 1:
-                self.obstacles.append(LargeCactus(LARGE_CACTUS)) 
-            elif random.randint(0, 2) == 2:
-                self.obstacles.append(Bird(BIRD))      
-            
+            obstacle = self.generate_obstacle(random.randint(0,2))
+            self.obstacles.append(obstacle)
             
         for obstacle in self.obstacles:
-            obstacle.update(game.game_speed, self.obstacles)  
+            obstacle.update(game.game_speed, self.obstacles)
             if game.player.dino_rect.colliderect(obstacle.rect):
                 game.playing = False
-                game.death_count += 1
+                game.death_count.update()
                 break
-        
-        
-    
+            
+            
+            
     def draw(self, screen):
         for obstacle in self.obstacles:
-            obstacle.draw(screen)
+            obstacle.draw(screen) 
             
-            
+    def generate_obstacle(self, obstacle_type):
+        if obstacle_type == 0:
+            cactus_type = 'SMALL'
+            obstacle = Cactus(cactus_type)
+        elif obstacle_type == 1:
+            cactus_type = 'LARGE'
+            obstacle = Cactus(cactus_type)
+        else:
+            obstacle = Bird() 
+            return obstacle  
+        
     def reset_obstacles(self):
-        self.obstacles = []        
+        self.obstacles = []                        
